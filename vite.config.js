@@ -39,12 +39,13 @@ export default defineConfig({
         shortcuts: [
           { name: 'শিক্ষার্থী তালিকা', short_name: 'তালিকা', url: '/?tab=students', icons: [icon('/icons/icon-192.png', '192x192')] },
           { name: 'শাটল ট্রেন', short_name: 'ট্রেন', url: '/?tab=train', icons: [icon('/icons/icon-192.png', '192x192')] },
+          { name: 'ট্রাফিক চিহ্ন', short_name: 'চিহ্ন', url: '/?tab=signs', icons: [icon('/icons/icon-192.png', '192x192')] },
         ],
       },
       workbox: {
         // অ্যাপ শেল, ফন্ট, আইকন, ছোট ছবি, ফরম PDF — সব প্রি-ক্যাশে (অফলাইনে কাজ করবে)
         globPatterns: ['**/*.{js,css,html,ico,png,jpg,svg,woff2,gif,webmanifest,pdf}'],
-        globIgnores: ['**/*.woff', '**/train-schedule.png', '**/assets/g[0-9][0-9]-*.jpg', 'screenshots/**'],
+        globIgnores: ['**/*.woff', '**/train-schedule.png', '**/BRTA_Traffic_Signs.pdf', '**/assets/g[0-9][0-9]-*.jpg', 'screenshots/**'],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/\.pdf$/],
@@ -54,7 +55,7 @@ export default defineConfig({
         // বড় ছবি: প্রথমবার দেখলে ক্যাশে জমে, পরে অফলাইনেও দেখা যায়
         runtimeCaching: [
           {
-            urlPattern: ({ url }) => /\/assets\/g\d\d-.*\.jpg$/.test(url.pathname) || url.pathname === '/train-schedule.png',
+            urlPattern: ({ url }) => /\/assets\/g\d\d-.*\.jpg$/.test(url.pathname) || url.pathname === '/train-schedule.png' || url.pathname === '/BRTA_Traffic_Signs.pdf',
             handler: 'CacheFirst',
             options: {
               cacheName: 'big-images',

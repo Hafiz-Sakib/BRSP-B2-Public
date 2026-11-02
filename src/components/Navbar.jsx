@@ -8,12 +8,14 @@ const ICONS = {
   home: 'M3 12l9-9 9 9M5 10v10h5v-6h4v6h5V10',
   students: 'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21v-1a6 6 0 0112 0v1M17 11a3 3 0 100-6M20 21v-1a5 5 0 00-3-4.6',
   train: 'M7 3h10a3 3 0 013 3v9a3 3 0 01-3 3H7a3 3 0 01-3-3V6a3 3 0 013-3zM4 11h16M8 21l2-3M16 21l-2-3',
+  signs: 'M12 3l10 18H2L12 3zM12 10v5M12 18v.01',
 };
 
 export const NAV_ITEMS = [
   { id: 'home', label: 'হোম' },
   { id: 'students', label: 'শিক্ষার্থী তালিকা' },
   { id: 'train', label: 'শাটল ট্রেন' },
+  { id: 'signs', label: 'ট্রাফিক চিহ্ন' },
 ];
 
 const LOGOS = [
