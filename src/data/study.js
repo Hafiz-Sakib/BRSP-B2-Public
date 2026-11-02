@@ -52,6 +52,14 @@ export const STUDY_GROUPS = [
     lead: 'গাড়ির যন্ত্রপাতি ও রক্ষণাবেক্ষণ বোঝার জন্য।',
     items: [
       {
+        title: 'হ্যান্ড টুলস চার্ট (ছবিসহ নাম)',
+        desc: 'রেঞ্জ, প্লায়ার, স্ক্রু ড্রাইভার, গুটি ইত্যাদি ২১টি যন্ত্রের ইংরেজি ও বাংলা নাম — ছবিসহ।',
+        file: 'Hand_Tools_Chart.jpg',
+        preview: 'Hand_Tools_Chart_thumb.jpg',
+        kind: 'ছবি',
+        size: '০.৪ MB',
+      },
+      {
         title: 'CBLM: হ্যান্ড টুলস ও পাওয়ার টুলস ব্যবহার',
         desc: 'অটোমোটিভ কোর্সের কম্পিটেন্সি বেজড লার্নিং ম্যাটেরিয়ালস (লেভেল-০১)।',
         file: 'CBLM_Hand_and_Power_Tools.pdf',
@@ -74,6 +82,6 @@ export const STUDY_GROUPS = [
       },
     ],
   },
-].map((g) => ({ ...g, items: g.items.map((i) => ({ ...i, url: dir + i.file })) }));
+].map((g) => ({ ...g, items: g.items.map((i) => ({ ...i, url: dir + i.file, previewUrl: i.preview && dir + i.preview })) }));
 
 export const STUDY_ITEMS = STUDY_GROUPS.flatMap((g) => g.items);

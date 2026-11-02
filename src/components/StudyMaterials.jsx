@@ -19,13 +19,13 @@ export default function StudyMaterials() {
       <PageBanner
         title="স্টাডি ম্যাটেরিয়ালস"
         subtitle="রেগুলার ড্রাইভিং লাইসেন্স পরীক্ষার প্রস্তুতি"
-        chips={[`${bnNum(STUDY_ITEMS.length)}টি PDF`, 'দেখুন ও ডাউনলোড করুন']}
+        chips={[`${bnNum(STUDY_ITEMS.length)}টি ফাইল`, 'দেখুন ও ডাউনলোড করুন']}
       />
 
       <div className="px-4 sm:px-8 py-8 sm:py-10">
         <div className="max-w-6xl mx-auto space-y-10">
           <p className="text-sm sm:text-base text-slate-600 max-w-3xl leading-relaxed">
-            ফোনে রেখে অফলাইনে পড়তে চাইলে ‘ডাউনলোড’ চাপুন। ‘দেখুন’ চাপলে নতুন ট্যাবে PDF খুলবে।
+            ফোনে রেখে অফলাইনে পড়তে চাইলে ‘ডাউনলোড’ চাপুন। ‘দেখুন’ চাপলে নতুন ট্যাবে ফাইল খুলবে।
           </p>
 
           {STUDY_GROUPS.map((g) => (
@@ -45,9 +45,14 @@ export default function StudyMaterials() {
                           {f.tag && <span className="ml-2 align-middle rounded-full bg-brsp-red/10 text-brsp-red px-2 py-0.5 text-xs font-bold">{f.tag}</span>}
                         </h3>
                         <p className="mt-1 text-sm text-slate-600 leading-relaxed">{f.desc}</p>
-                        <p className="mt-1.5 text-xs text-slate-500">PDF · {bnNum(f.pages)} পৃষ্ঠা · {f.size}</p>
+                        <p className="mt-1.5 text-xs text-slate-500">{f.pages ? `PDF · ${bnNum(f.pages)} পৃষ্ঠা` : f.kind} · {f.size}</p>
                       </div>
                     </div>
+                    {f.previewUrl && (
+                      <a href={f.url} target="_blank" rel="noopener noreferrer" className="mt-4 block max-w-xs mx-auto rounded-xl overflow-hidden border border-slate-200 bg-white">
+                        <img src={f.previewUrl} width={512} height={768} alt={f.title} loading="lazy" decoding="async" className="w-full h-auto" />
+                      </a>
+                    )}
                     <div className="mt-auto pt-4 grid grid-cols-2 gap-2">
                       <a href={f.url} target="_blank" rel="noopener noreferrer" className={`${btn} border border-slate-300 text-slate-700 hover:bg-slate-50`}>দেখুন</a>
                       <a href={f.url} download={f.file} className={`${btn} bg-brsp-green text-white hover:bg-emerald-800`}>ডাউনলোড</a>
