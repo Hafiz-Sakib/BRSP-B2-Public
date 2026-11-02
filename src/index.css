@@ -1,0 +1,117 @@
+/* Kalpurush (বাংলা ফন্ট, OFL লাইসেন্স) — self-hosted; শুধু Regular ওজন আছে, বোল্ড ব্রাউজার নিজে তৈরি করে */
+@font-face {
+  font-family: 'Kalpurush';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./assets/fonts/kalpurush.woff2') format('woff2'), url('./assets/fonts/kalpurush.woff') format('woff');
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* PWA standalone: নচ/স্ট্যাটাস বার সেফ এরিয়া */
+body {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+body {
+  margin: 0;
+  font-family: 'Kalpurush', system-ui, sans-serif;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+  }
+  .print-shadow {
+    box-shadow: none !important;
+  }
+}
+
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+  article {
+    box-shadow: none !important;
+    transform: none !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* রাস্তার মাঝের ডেশ-লাইন — হেডারের নিচে */
+.road-dash {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.4) 0 28px,
+    transparent 28px 52px
+  );
+}
+
+/* কিবোর্ড ফোকাস স্পষ্ট */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #00694d;
+  outline-offset: 2px;
+}
+
+/* ===== হালকা অ্যানিমেশন ===== */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.anim-header  { animation: slide-down 0.6s ease-out both; }
+.anim-banner  { animation: fade-in 0.7s ease-out 0.15s both; }
+.anim-tabs    { animation: pop-in 0.45s ease-out 0.25s both; }
+.anim-page    { animation: fade-in 0.35s ease-out both; }
+.anim-card {
+  animation: fade-up 0.5s ease-out both;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.anim-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px -12px rgb(30 41 59 / 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-header, .anim-banner, .anim-tabs, .anim-page, .anim-card {
+    animation: none !important;
+    transition: none !important;
+  }
+  .anim-card:hover { transform: none; }
+}
+@media print {
+  .anim-header, .anim-banner, .anim-tabs, .anim-page, .anim-card {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
