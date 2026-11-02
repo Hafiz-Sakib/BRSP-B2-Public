@@ -23,11 +23,20 @@ This is the **public-safe** edition of the BRSP car-wash roster app. Intentional
 - ❌ Duty roster page, WhatsApp reminder buttons and holiday notice
 - ❌ Attendance (হাজিরা) PDFs
 
-Still included: course info (Bangla), admission form + medical certificate form, photo gallery, student list (photo, name, reg, father's name), CU shuttle-train schedule, **instructor contact number** (tap-to-call), PWA install/offline.
+Still included: course info (Bangla), admission form + medical certificate form, photo gallery, student list (photo, name, reg, father's name), CU shuttle-train schedule, **instructor (Operating Instructor) profile with tap-to-call number**, PWA install/offline.
 
 ## Font
 
-All text uses **Kalpurush** (Bangla), self-hosted from `src/assets/fonts/` (SIL OFL 1.1 — see `OFL.txt`). Kalpurush ships only a Regular weight, so bold text is browser-synthesised. Font is set in `src/index.css` (`@font-face`) and `tailwind.config.js` (`fontFamily.sans`).
+All text uses **Kalpurush** (Bangla), self-hosted from `src/assets/fonts/` (SIL OFL 1.1 — see `OFL.txt`). Kalpurush ships only a Regular weight, so bold text is browser-synthesised. Text is thickened slightly with `-webkit-text-stroke: 0.4px` in `src/index.css` (body, buttons, inputs; 0.3px on h1/h2) — raise the value for heavier text, set `0` to remove. Font is set in `src/index.css` (`@font-face`) and `tailwind.config.js` (`fontFamily.sans`).
+
+## PWA (installable + offline)
+
+- **Install:** Android/Chrome/Edge/Desktop → "অ্যাপ ইনস্টল করুন" button; iPhone/iPad → button shows *Share → Add to Home Screen* steps. Hidden once installed.
+- **Offline:** app shell, fonts, icons, student photos, admission + medical form PDFs are precached. Gallery full-size photos and the train-schedule image are cached the first time they are viewed. An "offline" bar shows when the connection drops.
+- **Auto-update:** new deploys activate automatically (`registerType: 'autoUpdate'`).
+- **Phone-friendly:** notch / home-bar safe areas handled, no tap-highlight, no double-tap zoom, shortcuts for *Student list* and *Shuttle train*, install-dialog screenshots in `public/screenshots/` (re-take them if the design changes).
+- Config: `vite.config.js` (manifest + Workbox), `index.html` (iOS meta tags).
+- Test: `npm run build && npm run preview` (service worker runs only in production builds).
 
 ## Getting started
 

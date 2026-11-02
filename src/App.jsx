@@ -6,6 +6,7 @@ import SearchBar from './components/SearchBar.jsx';
 import StudentList from './components/StudentList.jsx';
 import TrainSchedule from './components/TrainSchedule.jsx';
 import Footer from './components/Footer.jsx';
+import OfflineBadge from './components/OfflineBadge.jsx';
 import { STUDENTS, BATCH } from './data/batch.js';
 import { studentMatches } from './utils/search.js';
 
@@ -48,6 +49,7 @@ export default function App() {
         )}
       </main>
       <Footer />
+      <OfflineBadge />
     </div>
   );
 }

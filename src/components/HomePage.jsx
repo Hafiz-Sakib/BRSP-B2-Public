@@ -191,12 +191,12 @@ export default function HomePage({ onNavigate }) {
           <figure className="relative bg-slate-100">
             <img
               src={instructorPhoto}
-              width={900}
-              height={997}
+              width={890}
+              height={932}
               alt={`${INSTRUCTOR_FULL_NAME} স্যার — ${INSTRUCTOR_ROLE}`}
               loading="lazy"
               decoding="async"
-              className="w-full h-72 sm:h-96 md:h-full object-cover object-[50%_25%]"
+              className="w-full h-72 sm:h-96 md:h-full object-cover object-[50%_30%]"
             />
           </figure>
           <div className="p-5 sm:p-8">

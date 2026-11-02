@@ -54,7 +54,7 @@ export default function Navbar({ tab, onChange }) {
   };
 
   return (
-    <nav ref={ref} aria-label="প্রধান মেনু" className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-[3px] border-brsp-red shadow-sm print:static print:shadow-none">
+    <nav ref={ref} aria-label="প্রধান মেনু" style={{ paddingTop: 'env(safe-area-inset-top)' }} className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-[3px] border-brsp-red shadow-sm print:static print:shadow-none">
       <div className="max-w-[90rem] mx-auto px-3 sm:px-6 h-16 flex items-center gap-3">
         {/* বাম পাশে লোগো */}
         <div className="flex items-center gap-2 sm:gap-4 shrink-0 min-w-0">

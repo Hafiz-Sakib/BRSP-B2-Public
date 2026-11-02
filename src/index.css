@@ -18,11 +18,43 @@ html {
 /* PWA standalone: নচ/স্ট্যাটাস বার সেফ এরিয়া */
 body {
   padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* অ্যাপের মতো টাচ: ডাবল-ট্যাপ জুম ও নীল হাইলাইট বন্ধ, পুল-টু-রিফ্রেশ বাউন্স কম */
+html {
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+a, button, input, [role='tab'] {
+  touch-action: manipulation;
+}
+/* ইনস্টল করা অ্যাপে লেখা সিলেক্ট কম */
+@media (display-mode: standalone) {
+  nav, button { -webkit-user-select: none; user-select: none; }
 }
 
 body {
   margin: 0;
   font-family: 'Kalpurush', system-ui, sans-serif;
+  /* Kalpurush এ শুধু Regular আছে — হালকা স্ট্রোক দিয়ে লেখা একটু মোটা করা হয়েছে (০.৪px = হালকা, ০.৭px = বেশি মোটা) */
+  -webkit-text-stroke: 0.4px currentColor;
+}
+
+/* বড় শিরোনামে স্ট্রোক কম, নইলে ফুলে যায় */
+h1, h2 {
+  -webkit-text-stroke-width: 0.3px;
+}
+
+/* বাটন/ইনপুটে স্ট্রোক ইনহেরিট হয় না, তাই আলাদা করে */
+button, input {
+  -webkit-text-stroke: 0.4px currentColor;
+}
+
+/* প্রিন্টে স্ট্রোক বন্ধ */
+@media print {
+  body, button, input { -webkit-text-stroke: 0; }
 }
 
 @media print {
