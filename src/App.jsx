@@ -6,12 +6,13 @@ import SearchBar from './components/SearchBar.jsx';
 import StudentList from './components/StudentList.jsx';
 import TrainSchedule from './components/TrainSchedule.jsx';
 import TrafficSigns from './components/TrafficSigns.jsx';
+import StudyMaterials from './components/StudyMaterials.jsx';
 import Footer from './components/Footer.jsx';
 import OfflineBadge from './components/OfflineBadge.jsx';
 import { STUDENTS, BATCH } from './data/batch.js';
 import { studentMatches } from './utils/search.js';
 
-const TABS = ['students', 'train', 'signs'];
+const TABS = ['students', 'train', 'signs', 'study'];
 
 export default function App() {
   const [query, setQuery] = useState('');
@@ -47,6 +48,8 @@ export default function App() {
           </>
         ) : tab === 'signs' ? (
           <TrafficSigns />
+        ) : tab === 'study' ? (
+          <StudyMaterials />
         ) : (
           <TrainSchedule />
         )}

@@ -193,6 +193,7 @@ export default function HomePage({ onNavigate }) {
               <button type="button" onClick={() => onNavigate('students')} className={`${btn} bg-white text-brsp-ink hover:bg-emerald-50`}>শিক্ষার্থী তালিকা</button>
               <button type="button" onClick={() => onNavigate('train')} className={`${btn} border border-white/40 hover:bg-white/10`}>শাটল ট্রেন</button>
               <button type="button" onClick={() => onNavigate('signs')} className={`${btn} border border-white/40 hover:bg-white/10`}>ট্রাফিক চিহ্ন</button>
+              <button type="button" onClick={() => onNavigate('study')} className={`${btn} border border-white/40 hover:bg-white/10`}>স্টাডি ম্যাটেরিয়ালস</button>
             </div>
           </div>
         </div>
