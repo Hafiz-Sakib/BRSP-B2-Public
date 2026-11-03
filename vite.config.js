@@ -49,7 +49,7 @@ export default defineConfig({
         globIgnores: ['**/*.woff', '**/train-schedule.png', '**/BRTA_Traffic_Signs.pdf', 'study/**', '**/assets/g[0-9][0-9]-*.jpg', 'screenshots/**'],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         navigateFallback: '/index.html',
-        navigateFallbackDenylist: [/\.pdf$/],
+        navigateFallbackDenylist: [/\.(pdf|jpe?g|png|webp|gif|avif)$/i, /^\/study\//],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         skipWaiting: true,
