@@ -39,8 +39,8 @@ export default defineConfig({
         shortcuts: [
           { name: 'শিক্ষার্থী তালিকা', short_name: 'তালিকা', url: '/?tab=students', icons: [icon('/icons/icon-192.png', '192x192')] },
           { name: 'শাটল ট্রেন', short_name: 'ট্রেন', url: '/?tab=train', icons: [icon('/icons/icon-192.png', '192x192')] },
-          { name: 'ট্রাফিক চিহ্ন', short_name: 'চিহ্ন', url: '/?tab=signs', icons: [icon('/icons/icon-192.png', '192x192')] },
-          { name: 'স্টাডি ম্যাটেরিয়ালস', short_name: 'স্টাডি', url: '/?tab=study', icons: [icon('/icons/icon-192.png', '192x192')] },
+          { name: 'ট্রাফিক ও স্টাডি', short_name: 'শিখুন', url: '/?tab=learn', icons: [icon('/icons/icon-192.png', '192x192')] },
+          { name: 'কুইজ', short_name: 'কুইজ', url: '/?tab=quiz', icons: [icon('/icons/icon-192.png', '192x192')] },
         ],
       },
       workbox: {
