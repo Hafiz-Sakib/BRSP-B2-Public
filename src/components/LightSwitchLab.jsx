@@ -294,6 +294,170 @@ function Knob({ ring, setRing }) {
   );
 }
 
+/* ---------------- স্টক (লিভার): উপরে / নিউট্রাল / নিচে + সামনে ঠেলা ---------------- */
+const LEVER = [
+  { id: 'R', angle: -24, label: 'উপরে → ডান (R)', mark: 'ডান (R)' },
+  { id: 'N', angle: 0, label: 'নিউট্রাল (মাঝখানে)', mark: 'নিউট্রাল' },
+  { id: 'L', angle: 24, label: 'নিচে → বাঁ (L)', mark: 'বাঁ (L)' },
+];
+
+function Lever({ turn, setTurn, high, blink }) {
+  const ref = useRef(null);
+  const drag = useRef(false);
+  const PX = 58;
+  const PY = 88;
+  const cur = LEVER.find((l) => l.id === (turn || 'N'));
+  const set = (id) => setTurn(id === 'N' ? null : id);
+
+  const pick = (e) => {
+    const r = ref.current.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width) * 320 - PX;
+    const y = ((e.clientY - r.top) / r.height) * 176 - PY;
+    const a = (Math.atan2(y, Math.max(x, 8)) * 180) / Math.PI; // নিচে = ধনাত্মক
+    const n = LEVER.reduce((b, l) => (Math.abs(l.angle - a) < Math.abs(b.angle - a) ? l : b));
+    set(n.id);
+  };
+  const down = (e) => {
+    drag.current = true;
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+    pick(e);
+  };
+  const move = (e) => drag.current && pick(e);
+  const up = () => { drag.current = false; };
+  const onKey = (e) => {
+    const i = LEVER.findIndex((l) => l.id === (turn || 'N'));
+    if (e.key === 'ArrowUp') { e.preventDefault(); set(LEVER[Math.max(0, i - 1)].id); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); set(LEVER[Math.min(2, i + 1)].id); }
+  };
+  const lit = !!turn && blink;
+
+  return (
+    <svg ref={ref} viewBox="0 0 320 176" className="mx-auto block h-auto w-full max-w-[22rem] touch-none select-none" role="slider" tabIndex={0} aria-label="স্টক (লিভার)" aria-valuemin={0} aria-valuemax={2} aria-valuenow={LEVER.findIndex((l) => l.id === (turn || 'N'))} aria-valuetext={cur.label} onKeyDown={onKey}>
+      <defs>
+        <linearGradient id="lsl-stalk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#475569" /><stop offset="0.5" stopColor="#1f2937" /><stop offset="1" stopColor="#0f172a" /></linearGradient>
+        <filter id="lsl-lg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" /></filter>
+      </defs>
+      {/* পথ (আর্ক) ও মার্কার */}
+      <path d={`M ${PX + 172 * Math.cos((-24 * Math.PI) / 180)} ${PY + 172 * Math.sin((-24 * Math.PI) / 180)} A 172 172 0 0 1 ${PX + 172 * Math.cos((24 * Math.PI) / 180)} ${PY + 172 * Math.sin((24 * Math.PI) / 180)}`} fill="none" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="4 5" />
+      {LEVER.map((l) => {
+        const rad = (l.angle * Math.PI) / 180;
+        const x = PX + 172 * Math.cos(rad);
+        const y = PY + 172 * Math.sin(rad);
+        const on = (turn || 'N') === l.id;
+        return (
+          <g key={l.id} onClick={() => set(l.id)} style={{ cursor: 'pointer' }}>
+            <circle cx={x} cy={y} r="9" fill={on ? '#fbbf24' : '#f1f5f9'} stroke={on ? '#f59e0b' : '#94a3b8'} strokeWidth="2" />
+            <text x={x + 16} y={y + 4} fontSize="11" fontWeight={on ? 700 : 500} fill={on ? '#0f172a' : '#64748b'}>{l.mark}</text>
+          </g>
+        );
+      })}
+      {/* স্টিয়ারিং কলাম */}
+      <rect x="0" y="40" width="46" height="96" rx="14" fill="#1e293b" />
+      <circle cx={PX} cy={PY} r="22" fill="#334155" stroke="#64748b" strokeWidth="2" />
+      {/* স্টক — পিভটে ঘোরে */}
+      <g
+        style={{ transform: `rotate(${cur.angle}deg)`, transformOrigin: `${PX}px ${PY}px`, transition: 'transform .3s cubic-bezier(.22,1,.36,1)', cursor: 'grab' }}
+        onPointerDown={down}
+        onPointerMove={move}
+        onPointerUp={up}
+        onPointerCancel={up}
+      >
+        <g>
+          <rect x={PX} y={PY - 11} width="156" height="22" rx="11" fill="url(#lsl-stalk)" stroke="#475569" />
+          {/* রিংয়ের খাঁজ */}
+          <g stroke="#334155" strokeWidth="2.5" strokeLinecap="round">
+            <path d={`M${PX + 100} ${PY - 8}v16M${PX + 108} ${PY - 8}v16M${PX + 116} ${PY - 8}v16M${PX + 124} ${PY - 8}v16`} />
+          </g>
+          <rect x={PX + 134} y={PY - 9} width="22" height="18" rx="9" fill="#0f172a" />
+          <circle cx={PX + 145} cy={PY} r="4" fill={high ? '#60a5fa' : '#475569'} />
+          {high && <circle cx={PX + 145} cy={PY} r="14" fill="#60a5fa" opacity=".6" filter="url(#lsl-lg)" />}
+          {/* স্টকের গায়ে ইন্ডিকেটর তীর */}
+          <g transform={`translate(${PX + 36} ${PY - 6}) scale(.5)`} fill="none" stroke={lit ? '#fb923c' : '#94a3b8'} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 12l5-5v3h4v4H8v3zM21 12l-5-5v3h-1v4h1v3z" />
+          </g>
+        </g>
+      </g>
+    </svg>
+  );
+}
+
+/* ---------------- স্টক সামনে ঠেলা / পেছনে টানা (উপর থেকে দেখা): হাই বিম ↔ লো বিম ---------------- */
+function PushLever({ high, onSet, nudge }) {
+  const ref = useRef(null);
+  const drag = useRef(false);
+  const PX = 270;
+  const PY = 112;
+  const ang = high ? 14 : nudge ? 7 : 0; // ধনাত্মক = মাথা সামনে (উপরে)
+
+  const pick = (e) => {
+    const r = ref.current.getBoundingClientRect();
+    const y = ((e.clientY - r.top) / r.height) * 190 - PY;
+    onSet(y < -22); // নিউট্রালের চেয়ে অনেকটা সামনে টানলে = হাই বিম
+  };
+  const down = (e) => {
+    drag.current = true;
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+    pick(e);
+  };
+  const move = (e) => drag.current && pick(e);
+  const up = () => { drag.current = false; };
+  const onKey = (e) => {
+    if (e.key === 'ArrowUp') { e.preventDefault(); onSet(true); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); onSet(false); }
+  };
+  const rad = (14 * Math.PI) / 180;
+  const mx = PX - 205 * Math.cos(rad);
+  const my = PY - 205 * Math.sin(rad);
+
+  return (
+    <svg ref={ref} viewBox="0 0 320 190" className="mx-auto block h-auto w-full max-w-[22rem] touch-none select-none" role="slider" tabIndex={0} aria-label="স্টক সামনে-পেছনে" aria-valuemin={0} aria-valuemax={1} aria-valuenow={high ? 1 : 0} aria-valuetext={high ? 'সামনে ঠেলা — হাই বিম' : 'পেছনে — লো বিম'} onKeyDown={onKey}>
+      <defs>
+        <linearGradient id="lsl-stalk2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#475569" /><stop offset=".5" stopColor="#1f2937" /><stop offset="1" stopColor="#0f172a" /></linearGradient>
+        <filter id="lsl-lg2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" /></filter>
+      </defs>
+      {/* দিক নির্দেশ */}
+      <rect x="6" y="6" width="308" height="22" rx="8" fill="#e0f2fe" />
+      <text x="160" y="21" textAnchor="middle" fontSize="11" fontWeight="700" fill="#0369a1">▲ সামনে (উইন্ডশিল্ডের দিকে)</text>
+      <rect x="6" y="162" width="308" height="22" rx="8" fill="#f1f5f9" />
+      <text x="160" y="177" textAnchor="middle" fontSize="11" fontWeight="700" fill="#475569">▼ পেছনে (চালকের দিকে)</text>
+      {/* মার্কার */}
+      <g onClick={() => onSet(true)} style={{ cursor: 'pointer' }}>
+        <circle cx={mx} cy={my} r="9" fill={high ? '#60a5fa' : '#f1f5f9'} stroke={high ? '#2563eb' : '#94a3b8'} strokeWidth="2" />
+        <text x={mx + 14} y={my - 6} fontSize="11" fontWeight={high ? 700 : 500} fill={high ? '#1d4ed8' : '#64748b'}>হাই বিম</text>
+        <text x={mx + 14} y={my + 7} fontSize="10" fill="#64748b">সামনে ঠেলুন</text>
+      </g>
+      <g onClick={() => onSet(false)} style={{ cursor: 'pointer' }}>
+        <circle cx={PX - 205} cy={PY} r="9" fill={!high ? '#fbbf24' : '#f1f5f9'} stroke={!high ? '#f59e0b' : '#94a3b8'} strokeWidth="2" />
+        <text x={PX - 205 + 14} y={PY + 20} fontSize="11" fontWeight={!high ? 700 : 500} fill={!high ? '#0f172a' : '#64748b'}>লো বিম</text>
+        <text x={PX - 205 + 14} y={PY + 33} fontSize="10" fill="#64748b">টেনে নিজের দিকে</text>
+      </g>
+      {/* স্টিয়ারিং কলাম */}
+      <rect x={PX - 8} y="44" width="58" height="136" rx="16" fill="#1e293b" />
+      <circle cx={PX} cy={PY} r="22" fill="#334155" stroke="#64748b" strokeWidth="2" />
+      {/* স্টক — পিভটে সামনে-পেছনে দোলে */}
+      <g
+        style={{ transform: `rotate(${ang}deg)`, transformOrigin: `${PX}px ${PY}px`, transition: 'transform .3s cubic-bezier(.22,1,.36,1)', cursor: 'grab' }}
+        onPointerDown={down}
+        onPointerMove={move}
+        onPointerUp={up}
+        onPointerCancel={up}
+      >
+        <rect x={PX - 150} y={PY - 11} width="150" height="22" rx="11" fill="url(#lsl-stalk2)" stroke="#475569" />
+        <g stroke="#334155" strokeWidth="2.5" strokeLinecap="round">
+          <path d={`M${PX - 120} ${PY - 8}v16M${PX - 112} ${PY - 8}v16M${PX - 104} ${PY - 8}v16M${PX - 96} ${PY - 8}v16`} />
+        </g>
+        <rect x={PX - 150} y={PY - 9} width="22" height="18" rx="9" fill="#0f172a" />
+        <circle cx={PX - 139} cy={PY} r="4" fill={high ? '#60a5fa' : '#475569'} />
+        {high && <circle cx={PX - 139} cy={PY} r="15" fill="#60a5fa" opacity=".65" filter="url(#lsl-lg2)" />}
+      </g>
+      {/* গতির তীর */}
+      <g fill="none" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M40 150v-24m0 0l-7 8m7-8l7 8" stroke={high ? '#2563eb' : '#cbd5e1'} />
+      </g>
+    </svg>
+  );
+}
+
 const ROWS = [
   { id: 'off', name: 'অফ', sym: <span className="text-sm font-bold">OFF</span>, does: 'সব লাইট বন্ধ।' },
   { id: 'park', name: 'পজিশন / পার্কিং লাইট', sym: <SunIcon />, does: 'সামনের-পেছনের ছোট বাতি, নম্বর প্লেট ও ড্যাশবোর্ডের লাইট জ্বলে।' },
@@ -308,20 +472,24 @@ export default function LightSwitchLab({ compact = false }) {
   const [turn, setTurn] = useState(null); // null | 'L' | 'R'
   const [blink, setBlink] = useState(true);
   const [hint, setHint] = useState('');
+  const [nudge, setNudge] = useState(false);
 
   const setRing = (r) => {
     setRingState(r);
     if (r !== 'low') setHigh(false);
     setHint('');
   };
-  const toggleHigh = () => {
-    if (ring !== 'low') {
+  const setHighTo = (v) => {
+    if (v && ring !== 'low') {
       setHint('হাই বিম জ্বালাতে আগে রিং ঘুরিয়ে হেডলাইট (লো বিম) চালু করুন।');
+      setNudge(true); // স্টক একটু এগিয়ে আবার ফিরে আসে — কাজ করল না
+      setTimeout(() => setNudge(false), 350);
       return;
     }
     setHint('');
-    setHigh((h) => !h);
+    setHigh(v);
   };
+  const toggleHigh = () => setHighTo(!high);
 
   useEffect(() => {
     if (!turn) { setBlink(true); return undefined; }
@@ -375,12 +543,15 @@ export default function LightSwitchLab({ compact = false }) {
                 ))}
               </div>
 
-              <p className="mt-5 text-sm font-bold text-slate-800">২) স্টক (লিভার) সরান</p>
-              <div className="mt-2 grid grid-cols-3 gap-2">
-                <button type="button" aria-pressed={turn === 'R'} onClick={() => setTurn((t) => (t === 'R' ? null : 'R'))} className={btn(turn === 'R', 'leading-tight')}>↑ উপরে<br /><span className="text-xs font-semibold opacity-80">ডান (R)</span></button>
-                <button type="button" aria-pressed={high} onClick={toggleHigh} className={btn(high, 'leading-tight')}>↗ সামনে ঠেলুন<br /><span className="text-xs font-semibold opacity-80">হাই বিম</span></button>
-                <button type="button" aria-pressed={turn === 'L'} onClick={() => setTurn((t) => (t === 'L' ? null : 'L'))} className={btn(turn === 'L', 'leading-tight')}>↓ নিচে<br /><span className="text-xs font-semibold opacity-80">বাঁ (L)</span></button>
-              </div>
+              <p className="mt-5 text-sm font-bold text-slate-800">২) স্টক (লিভার) — উপরে / নিচে (ইন্ডিকেটর)</p>
+              <p className="mt-0.5 text-xs text-slate-500">স্টকের মাথা ধরে উপরে বা নিচে টানুন, অথবা পাশের বিন্দুতে চাপ দিন। নিউট্রাল = ইন্ডিকেটর বন্ধ।</p>
+              <Lever turn={turn} setTurn={setTurn} high={high} blink={blink} />
+              <p className="mt-5 text-sm font-bold text-slate-800">৩) স্টক সামনে ঠেলুন / পেছনে টানুন (উপর থেকে দেখা)</p>
+              <p className="mt-0.5 text-xs text-slate-500">সামনে ঠেললে হাই বিম, নিজের দিকে টেনে আনলে লো বিমে ফেরে। (হাই বিমের জন্য আগে হেডলাইট চালু থাকতে হবে।)</p>
+              <PushLever high={high} onSet={setHighTo} nudge={nudge} />
+              <button type="button" aria-pressed={high} onClick={toggleHigh} className={btn(high, 'mt-3 w-full leading-tight')}>
+                {high ? '↙ টেনে নিজের দিকে আনুন — লো বিমে ফিরুন' : '↗ স্টক সামনে ঠেলুন — হাই বিম'}
+              </button>
               {hint && <p role="status" className="mt-3 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">{hint}</p>}
             </div>
 
